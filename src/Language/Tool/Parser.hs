@@ -151,6 +151,19 @@ topLevel = between whiteSpace eof
 toolParser :: Parser Program
 toolParser = topLevel parseProgram
 
+parseString :: String -> Program
+parseString str =
+  case parse toolParser "" str of
+    Left e  -> error $ show e
+    Right r -> r
+
+parseFile :: String -> IO Program
+parseFile file =
+  do program  <- readFile file
+     case parse toolParser "" program of
+       Left e  -> print e >> fail "parse error"
+       Right r -> return r
+
 parseProgram :: Parser Program
 parseProgram = do
   main    <- parseMainObject
@@ -336,15 +349,3 @@ parseNewIntArray = do
 parseIdent :: Parser Ident
 parseIdent = Ident <$> identifier
 
-parseString :: String -> Program
-parseString str =
-  case parse toolParser "" str of
-    Left e  -> error $ show e
-    Right r -> r
-
-parseFile :: String -> IO Program
-parseFile file =
-  do program  <- readFile file
-     case parse toolParser "" program of
-       Left e  -> print e >> fail "parse error"
-       Right r -> return r
