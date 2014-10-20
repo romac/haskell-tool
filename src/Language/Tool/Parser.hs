@@ -1,5 +1,10 @@
 
-module Language.Tool.Parser (
+{-# OPTIONS_GHC -Wall
+                -fno-warn-missing-signatures
+                -fno-warn-unused-do-bind #-}
+
+module Language.Tool.Parser
+(
     Program (..)
   , MainObject (..)
   , ClassDecl (..)
@@ -9,13 +14,18 @@ module Language.Tool.Parser (
   , Type (..)
   , Stmt (..)
   , Expr (..)
-  , parseTool
-) where
+  , toolParser
+  , parseString
+  , parseFile
+)
+where
 
-import           Control.Monad
-import           Text.ParserCombinators.Parsec
-import           Text.ParserCombinators.Parsec.Language
-import qualified Text.ParserCombinators.Parsec.Token as Token
+import           Prelude              hiding (id)
+import           Control.Applicative  hiding ((<|>), many, empty)
+import           Text.Parsec
+import           Text.Parsec.String
+import           Text.Parsec.Language
+import qualified Text.Parsec.Token    as T
 
 data Program =
   Program MainObject
@@ -82,7 +92,7 @@ data Expr =
   | ArrayRead Expr Expr
   | ArrayLength Expr
   | MethodCall Expr Ident [Expr]
-  | IntLit Int
+  | IntLit Integer
   | StringLit String
   | TrueLit
   | FalseLit
