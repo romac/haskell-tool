@@ -17,6 +17,7 @@ Library
   Other-Modules:        Language.Tool.Parser
   Build-Depends:        base >= 4 && < 5
                       , parsec >= 3.1.7 && < 3.2
+                      , pretty >= 1.1.1.2 && < 1.2
 
 Test-Suite spec
   Type:                 exitcode-stdio-1.0
