@@ -19,7 +19,7 @@ prettyPrint x = render (pretty x)
 
 infixl 4 ~>
 (~>) :: Doc -> Doc -> Doc
-(~>) a b = (a <+> lbrace) $+$ (nest 2 b) $+$ rbrace
+(~>) a b = (a <+> lbrace) $+$ nest 2 b $+$ rbrace
 
 mainMethod :: Doc -> Doc
 mainMethod stmts = "def main(): Unit =" ~> stmts

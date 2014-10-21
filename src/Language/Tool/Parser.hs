@@ -116,7 +116,7 @@ parseType =  parseIntType
 parseIntType :: Parser Type
 parseIntType = do
   reserved "Int"
-  (brackets empty >> return IntArrayType) <|> (return IntType)
+  (brackets empty >> return IntArrayType) <|> return IntType
 
 parseStmt :: Parser Stmt
 parseStmt =  parseBlock
@@ -182,9 +182,9 @@ parseExprRest t =
 
 parseTerm :: Parser Expr
 parseTerm =
-      (lit "true"  TrueLit)
-  <|> (lit "false" FalseLit)
-  <|> (lit "this"  This)
+      lit "true"  TrueLit
+  <|> lit "false" FalseLit
+  <|> lit "this"  This
   <|> IntLit     <$> integer
   <|> StringLit  <$> stringLiteral
   <|> Identifier <$> parseIdent
