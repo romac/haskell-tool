@@ -1,20 +1,9 @@
 
-{-# OPTIONS_GHC -Wall
-                -fno-warn-missing-signatures
-                -fno-warn-unused-do-bind #-}
+{-# OPTIONS_GHC -fno-warn-unused-do-bind #-}
 
 module Language.Tool.Parser
 (
-    Program (..)
-  , MainObject (..)
-  , ClassDecl (..)
-  , VarDecl (..)
-  , MethodDecl (..)
-  , Formal (..)
-  , Type (..)
-  , Stmt (..)
-  , Expr (..)
-  , toolParser
+    toolParser
   , parseString
   , parseFile
 )
@@ -22,122 +11,12 @@ where
 
 import           Prelude              hiding (id)
 import           Control.Applicative  hiding ((<|>), many, empty)
+
 import           Text.Parsec
 import           Text.Parsec.String
-import           Text.Parsec.Language
-import qualified Text.Parsec.Token    as T
 
-data Program =
-  Program MainObject
-          [ClassDecl]
-  deriving (Show)
-
-data MainObject =
-  MainObject Ident
-             [Stmt]
-  deriving (Show)
-
-data ClassDecl =
-  ClassDecl Ident
-            (Maybe Ident)
-            [VarDecl]
-            [MethodDecl]
-  deriving (Show)
-
-data VarDecl =
-  VarDecl Ident
-          Type
-  deriving (Show)
-
-data MethodDecl =
-  MethodDecl Ident
-             Type
-             [Formal]
-             [VarDecl]
-             [Stmt]
-             Expr
-  deriving (Show)
-
-data Formal =
-  Formal Ident
-         Type
-  deriving (Show)
-
-data Type =
-    IntArrayType
-  | IntType
-  | BoolType
-  | StringType
-  | ClassType Ident
-  deriving (Show)
-
-data Stmt =
-    Block [Stmt]
-  | If Expr Stmt (Maybe Stmt)
-  | While Expr Stmt
-  | Println Expr
-  | Assign Ident Expr
-  | ArrayAssign Ident Expr Expr
-  deriving (Show)
-
-data Expr =
-    And Expr Expr
-  | Or Expr Expr
-  | Plus Expr Expr
-  | Minus Expr Expr
-  | Times Expr Expr
-  | Div Expr Expr
-  | LessThan Expr Expr
-  | Equals Expr Expr
-  | ArrayRead Expr Expr
-  | ArrayLength Expr
-  | MethodCall Expr Ident [Expr]
-  | IntLit Integer
-  | StringLit String
-  | TrueLit
-  | FalseLit
-  | Identifier Ident
-  | This
-  | NewIntArray Expr
-  | New Ident
-  | Not Expr
-  deriving (Show)
-
-newtype Ident =
-  Ident String
-  deriving (Show)
-
-
-toolDef :: LanguageDef st
-toolDef =
-  javaStyle { T.nestedComments  = False
-            , T.reservedNames   = [ "object", "class", "def", "var"
-                                , "Unit", "main", "String", "extends"
-                                , "Int", "Bool", "while", "if", "else"
-                                , "return", "length", "true", "false"
-                                , "this", "new", "println" ]
-            , T.reservedOpNames = [ "+", "-", "*", "/"
-                                , "<", "||", "&&", "!" ]
-            , T.caseSensitive   = True
-            }
-
-lexer = T.makeTokenParser toolDef
-
-identifier    = T.identifier    lexer
-reserved      = T.reserved      lexer
--- reservedOp = T.reservedOp    lexer
-parens        = T.parens        lexer
-integer       = T.integer       lexer
-stringLiteral = T.stringLiteral lexer
-semi          = T.semi          lexer
-colon         = T.colon         lexer
-whiteSpace    = T.whiteSpace    lexer
-braces        = T.braces        lexer
-brackets      = T.brackets      lexer
-symbol        = T.symbol        lexer
-dot           = T.dot           lexer
-
-comma         = symbol ","
+import           Language.Tool.AST
+import           Language.Tool.Lexer
 
 empty :: Parser ()
 empty = return ()
