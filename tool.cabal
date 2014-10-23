@@ -4,8 +4,8 @@ Author:                 Romain Ruetschi <romain.ruetschi@gmail.com>
 Maintainer:             Romain Ruetschi <romain.ruetschi@gmail.com>
 License:                BSD3
 License-File:           LICENSE
--- Synopsis:               
--- Description:            
+-- Synopsis:
+-- Description:
 Cabal-Version:          >= 1.20
 Build-Type:             Simple
 
@@ -14,7 +14,10 @@ Library
   HS-Source-Dirs:       src
   GHC-Options:          -Wall
   Exposed-Modules:      Language.Tool
-  Other-Modules:        Language.Tool.Parser
+                      , Language.Tool.Parser
+                      , Language.Tool.Lexer
+                      , Language.Tool.PrettyPrinter
+  Other-Modules:
   Build-Depends:        base >= 4 && < 5
                       , parsec >= 3.1.7 && < 3.2
                       , pretty >= 1.1.1.2 && < 1.2
@@ -22,12 +25,14 @@ Library
 Test-Suite spec
   Type:                 exitcode-stdio-1.0
   Default-Language:     Haskell2010
-  Hs-Source-Dirs:       src
-                      , test
+  Hs-Source-Dirs:       src, test
   Ghc-Options:          -Wall
   Main-Is:              Spec.hs
   Build-Depends:        base
                       , hspec
+                      , parsec
+                      , pretty
+                      , QuickCheck
 
 Source-Repository head
   Type:                 git
