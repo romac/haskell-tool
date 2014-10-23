@@ -123,7 +123,7 @@ instance Pretty Expr where
   pretty (Identifier id)    = pretty id
   pretty (This)             = text "this"
   pretty (NewIntArray size) = "new Int" <> brackets (pretty size)
-  pretty (New id)           = "new" <+> pretty id
+  pretty (New id)           = "new" <+> pretty id <> parens empty
   pretty (Not expr)         = "!" <> pretty expr
 
 instance Pretty Ident where
