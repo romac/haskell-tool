@@ -17,6 +17,13 @@ class Value {
     hello = h;
     world = w;
 
+    if (h) {
+      println("hello");
+    }
+    else {
+      w = h;
+    }
+
     return w;
   }
 
