@@ -1,0 +1,1 @@
+/* hello **/object BinarySearch {		def main(): Unit = {			println(new Abc().test());		}}class Abc {    def test(): String = {    var toto: Int;    toto = 4/2;    return "hello";  }    }
