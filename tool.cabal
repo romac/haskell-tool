@@ -19,20 +19,8 @@ Library
                       , Language.Tool.PrettyPrinter
   Other-Modules:
   Build-Depends:        base >= 4 && < 5
-                      , parsec >= 3.1.7 && < 3.2
-                      , pretty >= 1.1.1.2 && < 1.2
-
-Test-Suite spec
-  Type:                 exitcode-stdio-1.0
-  Default-Language:     Haskell2010
-  Hs-Source-Dirs:       src, test
-  Ghc-Options:          -Wall
-  Main-Is:              Spec.hs
-  Build-Depends:        base
-                      , hspec
-                      , parsec
-                      , pretty
-                      , QuickCheck
+                      , parsec >= 3.1
+                      , pretty >= 1.1
 
 Source-Repository head
   Type:                 git
