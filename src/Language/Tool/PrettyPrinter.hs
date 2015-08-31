@@ -93,7 +93,7 @@ instance Pretty Stmt where
     pretty id <+> "=" <+> pretty val <> ";"
 
   pretty (ArrayAssign arr idx val) =
-    pretty arr <> brackets (pretty idx) <+> "=" <+> pretty val
+    pretty arr <> brackets (pretty idx) <+> "=" <+> pretty val <> ";"
 
 instance Pretty Expr where
   pretty (And a b)      = binOp "&&" a b
@@ -124,7 +124,7 @@ instance Pretty Expr where
   pretty (This)             = text "this"
   pretty (NewIntArray size) = "new Int" <> brackets (pretty size)
   pretty (New id)           = "new" <+> pretty id <> parens empty
-  pretty (Not expr)         = "!" <> pretty expr
+  pretty (Not expr)         = "!" <> parens (pretty expr)
 
 instance Pretty Ident where
   pretty (Ident i) = text i
