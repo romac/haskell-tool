@@ -10,10 +10,12 @@ module Language.Tool.Parser
 where
 
 import           Prelude              hiding (id)
-import           Control.Applicative  hiding ((<|>), many, empty)
+
+import           Data.Functor.Identity
 
 import           Text.Parsec
 import           Text.Parsec.String
+import           Text.Parsec.Expr
 
 import           Language.Tool.AST
 import           Language.Tool.Lexer
@@ -171,7 +173,9 @@ parseArrayAssign = do
   return $ ArrayAssign id idx val
 
 parseExpr :: Parser Expr
-parseExpr = parseTerm >>= parseExprRest
+parseExpr =
+  try parseArithm <|> parseFullTerm
+  <?> "expr"
 
 parseExprRest :: Expr -> Parser Expr
 parseExprRest t =
@@ -179,6 +183,10 @@ parseExprRest t =
   <|> try (parseArrayLength t)
   <|> try (parseMethodCall t)
   <|> return t
+  <?> "expr rest"
+
+parseFullTerm :: Parser Expr
+parseFullTerm = parseTerm >>= parseExprRest
 
 parseTerm :: Parser Expr
 parseTerm =
@@ -190,8 +198,28 @@ parseTerm =
   <|> Identifier <$> parseIdent
   <|> try parseNewIntArray
   <|> try parseNew
-  <|> (symbol "!" >> Not <$> parseExpr)
   <|> parens parseExpr
+  <?> "term"
+
+table :: [[Operator String u Identity Expr]]
+table = [ [prefix "!" Not]
+        , [binary "*" Times AssocLeft, binary "/" Div AssocLeft]
+        , [binary "+" Plus AssocLeft, binary "-" Minus AssocLeft]
+        , [binary "<" LessThan AssocLeft]
+        , [binary "==" Equals AssocLeft]
+        , [binary "&&" And AssocLeft]
+        , [binary "||" Or AssocLeft] ]
+
+binary :: String -> (a -> a -> a) -> Assoc -> Operator String u Identity a
+binary name fun assoc = Infix (reservedOp name >> return fun) assoc
+
+prefix :: String -> (a -> a) -> Operator String u Identity a
+prefix name fun = Prefix (reservedOp name >> return fun)
+
+parseArithm :: Parser Expr
+parseArithm =
+      buildExpressionParser table parseFullTerm
+  <?> "arithm"
 
 parseArrayRead :: Expr -> Parser Expr
 parseArrayRead arr = do

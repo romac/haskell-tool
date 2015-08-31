@@ -7,7 +7,7 @@ module Language.Tool.Lexer
   , lexer
   , identifier
   , reserved
-  -- , reservedOp
+  , reservedOp
   , parens
   , integer
   , stringLiteral
@@ -42,7 +42,7 @@ lexer = T.makeTokenParser toolDef
 
 identifier    = T.identifier    lexer
 reserved      = T.reserved      lexer
--- reservedOp = T.reservedOp    lexer
+reservedOp    = T.reservedOp    lexer
 parens        = T.parens        lexer
 integer       = T.integer       lexer
 stringLiteral = T.stringLiteral lexer
